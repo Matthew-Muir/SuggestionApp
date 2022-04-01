@@ -1,0 +1,106 @@
+﻿@page "/SampleData"
+@inject ICategoryData categoryData
+@inject IStatusData statusData
+
+<h3>Sample Data</h3>
+@if (categoriesCreated)
+{
+    <h4>Categories have been created</h4>
+}
+else
+{
+    <button class="btn btn-primary" @onclick="CreateCategories">Create Categories</button>
+}
+@if(statusesCreated)
+{
+    <h4>Statuses created</h4>
+}
+else
+{
+    <button class="btn btn-primary" @onclick="CreateStatuses">Create Statuses</button>
+}
+
+@code {
+    private bool categoriesCreated = false;
+    private bool statusesCreated = true;
+
+    private async Task CreateCategories()
+    {
+        var categories = await categoryData.GetAllCategories();
+
+        if (categories?.Count > 0)
+        {
+            return;
+        }
+
+        CategoryModel cat = new()
+            {
+                CategoryName = "Courses",
+                CategoryDescription = "Full paid courses."
+
+            };
+        await categoryData.CreateCategory(cat);
+
+        cat = new()
+            {
+                CategoryName = "Dev Questions",
+                CategoryDescription = "Advice on being a Developer."
+            };
+        await categoryData.CreateCategory(cat);
+        cat = new()
+            {
+                CategoryName = "In-Depth Tutorials",
+                CategoryDescription = "Deep dive video on topic"
+            };
+        await categoryData.CreateCategory(cat);
+        cat = new()
+            {
+                CategoryName = "10-Minute Training",
+                CategoryDescription = "Quick how-to videos."
+            };
+        await categoryData.CreateCategory(cat);
+        cat = new()
+            {
+                CategoryName = "Other",
+                CategoryDescription = "Surpise me."
+            };
+        await categoryData.CreateCategory(cat);
+
+        categoriesCreated = true;
+    }
+
+    private async Task CreateStatuses()
+    {
+        var statuses = await statusData.GetAllStatuses();
+        if (statuses?.Count > 0)
+        {
+            return;
+        }
+
+        StatusModel stat = new()
+            {
+                StatusName = "Completed",
+                StatusDescription = "suggestion has been accepted"
+            };
+        await statusData.CreateStatus(stat);
+        stat = new()
+            {
+                StatusName = "Watching",
+                StatusDescription = "Interested in this status"
+            };
+        await statusData.CreateStatus(stat);
+        stat = new()
+            {
+                StatusName = "Upcoming",
+                StatusDescription = "suggestion will be released soon"
+            };
+        await statusData.CreateStatus(stat);
+        stat = new()
+            {
+                StatusName = "Dismissed",
+                StatusDescription = "Not interested"
+            };
+        await statusData.CreateStatus(stat);
+        statusesCreated = true;
+    }
+}
